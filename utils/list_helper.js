@@ -20,8 +20,40 @@ const favoriteBlog = (blogs) => {
   )
 }
 
+const mostLikes = (blogs) => {
+  return blogs
+    .map((blog) => ({ author: blog.author, likes: blog.likes }))
+    .reduce((obj, currentObj) => {
+      obj = [...obj]
+
+      let objValues = Object.values(currentObj)
+      let author = objValues[0]
+      let likes = objValues[1]
+
+      let foundIndex = obj.findIndex((el) =>
+        el['author'] === author ? true : false
+      )
+
+      if (foundIndex >= 0) {
+        obj[foundIndex]['likes'] += likes
+      } else {
+        obj.push(currentObj)
+      }
+
+      return obj
+    }, [])
+    .reduce((author, currentAuthor) => {
+      author =
+        author.likes && author.likes > currentAuthor.likes
+          ? author
+          : currentAuthor
+      return author
+    }, [])
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostLikes
 }
