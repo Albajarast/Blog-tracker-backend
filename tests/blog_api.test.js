@@ -32,6 +32,27 @@ test('get property id instead of _id', async () => {
   }
 })
 
+test('new valid blog is added to the DB', async () => {
+  const newBlog = {
+    author: 'David López Albajara',
+    title: 'Testing the DB with POST request to /api/blogs',
+    url: 'http://thisisatesturl.com',
+    likes: 100
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await blogsInDb()
+  expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+
+  const blogTitles = blogsAtEnd.map((blog) => blog.title)
+  expect(blogTitles).toContain('Testing the DB with POST request to /api/blogs')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

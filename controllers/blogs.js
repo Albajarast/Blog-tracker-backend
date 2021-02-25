@@ -7,7 +7,14 @@ router.get('/', async (request, response) => {
 })
 
 router.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
+  const { author, title, url, likes } = request.body
+
+  const blog = new Blog({
+    author: author,
+    title: title,
+    url: url,
+    likes: likes
+  })
 
   const result = await blog.save()
   response.status(201).json(result)
