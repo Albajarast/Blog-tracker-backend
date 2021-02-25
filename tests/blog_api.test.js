@@ -53,6 +53,25 @@ test('new valid blog is added to the DB', async () => {
   expect(blogTitles).toContain('Testing the DB with POST request to /api/blogs')
 })
 
+test('when no likes are provided its default value is 0', async () => {
+  const newBlog = {
+    author: 'David López Albajara',
+    title: 'Testing the DB with POST request to /api/blogs',
+    url: 'http://thisisatesturl.com'
+  }
+
+  const { body } = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await blogsInDb()
+  expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+
+  expect(body.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
