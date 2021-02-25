@@ -2,8 +2,16 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
-const { MONGODB_USER, mongodbUrl } = require('./utils/config')
+const {
+  MONGODB_USER,
+  mongodbUrl,
+  MONGODB_URL,
+  TEST_MONGODB_URL
+} = require('./utils/config')
 const blogRoutes = require('./controllers/blogs')
+
+let connectedDb =
+  process.env.NODE_ENV === 'test' ? TEST_MONGODB_URL : MONGODB_URL
 
 mongoose
   .connect(mongodbUrl, {
@@ -13,7 +21,9 @@ mongoose
     useCreateIndex: true
   })
   .then(() => {
-    console.log(`Connected to MongoDB Atlas as ${MONGODB_USER}`)
+    console.log(
+      `Connected to MongoDB Atlas as ${MONGODB_USER} @ ${connectedDb}`
+    )
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
