@@ -16,8 +16,12 @@ router.post('/', async (request, response) => {
     likes: likes
   })
 
-  const result = await blog.save()
-  response.status(201).json(result)
+  if (!url || !title) {
+    return response.status(400).json({ error: 'missing data' })
+  } else {
+    const result = await blog.save()
+    response.status(201).json(result)
+  }
 })
 
 module.exports = router

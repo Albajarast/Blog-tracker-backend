@@ -72,6 +72,17 @@ test('when no likes are provided its default value is 0', async () => {
   expect(body.likes).toBe(0)
 })
 
+test('get 400 Bad request when no title or url are provided', async () => {
+  const newBlog = {
+    author: 'David López Albajara'
+  }
+
+  const { body } = await api.post('/api/blogs').send(newBlog).expect(400)
+
+  expect(body.error).toBeDefined()
+  expect(body.error).toBe('missing data')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
